@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 )
+
+const MONITORAMENTOS = 3
+const DELAY = 5
 
 func main() {
 	exibeIntroducao()
@@ -35,6 +39,7 @@ func exibeIntroducao() {
 }
 
 func exibeMenu() {
+	fmt.Println("")
 	fmt.Println("1 - Iniciar Monitoramento")
 	fmt.Println("2 - Exibir Logs")
 	fmt.Println("0 - Sair do Programa")
@@ -50,8 +55,23 @@ func leComando() int {
 
 func iniciarMonitoramento() {
 	fmt.Println("Monitorando...")
-	site := "https://www.alura.com.br"
+	sites := []string{
+		"https://www.alura.com.br",
+		"https://www.youtube.com",
+		"https://github.com/",
+	}
 
+	for i := 0; i < MONITORAMENTOS; i++ {
+		for _, site := range sites {
+			testaSite(site)
+		}
+		time.Sleep(DELAY * time.Second)
+		fmt.Println("")
+	}
+
+}
+
+func testaSite(site string) {
 	resp, _ := http.Get(site)
 
 	if resp.StatusCode == 200 {
@@ -59,5 +79,4 @@ func iniciarMonitoramento() {
 	} else {
 		fmt.Println("O site", site, "retornou o status: ", resp.StatusCode)
 	}
-
 }

@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const MONITORAMENTOS = 3
+const MONITORAMENTOS = 2
 const DELAY = 5
 
 func main() {
@@ -27,6 +27,7 @@ func main() {
 			iniciarMonitoramento()
 		case 2:
 			fmt.Println("Exibindo logs...")
+			imprimeLogs()
 		case 0:
 			fmt.Println("Saindo do programa")
 			os.Exit(0) // sair com sucesso
@@ -59,11 +60,6 @@ func leComando() int {
 
 func iniciarMonitoramento() {
 	fmt.Println("Monitorando...")
-	// sites := []string{
-	// 	"https://www.alura.com.br",
-	// 	"https://www.youtube.com",
-	// 	"https://github.com/",
-	// }
 
 	sites := leSitesDoArquivo()
 
@@ -96,7 +92,6 @@ func testaSite(site string) {
 func leSitesDoArquivo() []string {
 	var sites []string
 
-	//arquivo, err := os.Open("sitess.txt") devolve o ponteiro pro arquivo
 	arquivo, err := os.Open("sites.txt")
 	if err != nil {
 		fmt.Println("Erro ao abrir arquivo de sites: ", err)
@@ -126,7 +121,16 @@ func registraLog(site string, online bool) {
 		fmt.Println(err)
 	}
 
-	arquivo.WriteString(site + " - online: " + strconv.FormatBool(online) + "\n")
+	arquivo.WriteString(time.Now().Format("02/01/2006 15:04:05") + " - " + site + " - online: " + strconv.FormatBool(online) + "\n")
 
 	arquivo.Close()
+}
+
+func imprimeLogs() {
+	arquivo, err := os.ReadFile("log.txt")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(arquivo))
 }

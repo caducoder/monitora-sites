@@ -11,9 +11,6 @@ import (
 	"time"
 )
 
-const MONITORAMENTOS = 2
-const DELAY = 5
-
 func main() {
 	exibeIntroducao()
 
@@ -24,7 +21,13 @@ func main() {
 
 		switch comando {
 		case 1:
-			iniciarMonitoramento()
+			fmt.Println("Qual será o tempo de intervalo entre os testes?(minutos)")
+			var tempo uint
+			fmt.Scan(&tempo)
+			fmt.Print("Número de monitoramentos: ")
+			var rodadas int
+			fmt.Scan(&rodadas)
+			iniciarMonitoramento(tempo, rodadas)
 		case 2:
 			fmt.Println("Exibindo logs...")
 			imprimeLogs()
@@ -58,16 +61,16 @@ func leComando() int {
 	return comando
 }
 
-func iniciarMonitoramento() {
+func iniciarMonitoramento(tempo uint, rodadas int) {
 	fmt.Println("Monitorando...")
 
 	sites := leSitesDoArquivo()
 
-	for i := 0; i < MONITORAMENTOS; i++ {
+	for i := 0; i < rodadas; i++ {
 		for _, site := range sites {
 			testaSite(site)
 		}
-		time.Sleep(DELAY * time.Second)
+		time.Sleep(time.Duration(tempo) * time.Minute)
 		fmt.Println("")
 	}
 
